@@ -4,6 +4,11 @@ node n0 {
     network-config {
 	hostname router4
 	!
+	interface eth2
+	 ip address 10.0.4.2/24
+	 ipv6 address fc00::2/64
+	 mac address 42:00:aa:00:00:09
+	!
 	interface eth1
 	 ip address 10.0.2.2/24
 	 ipv6 address fc00:c::2/64
@@ -42,10 +47,17 @@ node n0 {
                 interface eth0
                  ip address 10.0.0.1/24
                  ipv6 address fc00:a::1/64
+                 ip ospf cost 8
                 !
                 interface eth1
                  ip address 10.0.2.2/24
                  ipv6 address fc00:c::2/64
+                 ip ospf cost 2
+                !
+                interface eth2
+                 ip address 10.0.4.2/24
+                 ipv6 address fc00:e::1/64
+                 ip ospf cost 10
                 !
                 router ospf
                  redistribute static
@@ -58,6 +70,7 @@ node n0 {
         }
     }
     custom-enabled true
+    interface-peer {eth2 n3}
     custom-selected default
 }
 
@@ -105,16 +118,18 @@ node n1 {
                 interface eth0
                  ip address 10.0.2.1/24
                  ipv6 address fc00:c::1/64
+                 ip ospf cost 2
                 !
                 interface eth1
                  ip address 10.0.3.1/24
                  ipv6 address fc00:d::1/64
+                 ip ospf cost 2
                 !
                 router ospf
                  redistribute static
                  redistribute connected
                  redistribute rip
-                 network 0.0.0.0/0 area 1.0.0.0 
+                 network 0.0.0.0/0 area 1.0.0.0
                 !
                 
             }
@@ -178,7 +193,6 @@ node n2 {
                  redistribute connected
                  redistribute rip
                  network 0.0.0.0/0 area 1.0.0.0
-                 network 10.0.1.2/24 area 0.0.0.0
                 !
                 
             }
@@ -193,6 +207,11 @@ node n3 {
     model quagga
     network-config {
 	hostname router1
+	!
+	interface eth2
+	 ip address 10.0.4.1/24
+	 ipv6 address fc00::1/64
+	 mac address 42:00:aa:00:00:08
 	!
 	interface eth3
 	 ip address 10.0.5.2/24
@@ -237,11 +256,16 @@ node n3 {
                 !
                 interface eth0
                  ip address 10.0.1.1/24
-                 ipv6 address fc00:d::2/64
+                 ipv6 address fc00:b::1/64
                 !
                 interface eth1
                  ip address 10.0.3.2/24
+                 ipv6 address fc00:d::2/64
+                !
+                interface eth2
+                 ip address 10.0.4.1/24
                  ipv6 address fc00:e::2/64
+                 ip ospf cost 10
                 !
                 interface eth3
                  ip address 10.0.5.2/24
@@ -252,12 +276,16 @@ node n3 {
                  redistribute connected
                  redistribute rip
                  network 0.0.0.0/0 area 0.0.0.0
+                 network 10.0.3.2/24 area 1.0.0.0
+                 network 10.0.1.1/24 area 1.0.0.0
+                 network 10.0.4.1/24 area 1.0.0.0
                 !
                 
             }
         }
     }
     custom-enabled true
+    interface-peer {eth2 n0}
     custom-selected default
 }
 
@@ -385,6 +413,7 @@ node n5 {
                 interface eth0
                  ip address 10.0.6.2/24
                  ipv6 address fc00:10::2/64
+                 ospf cost 2
                 !
                 interface eth1
                  ip address 10.0.8.2/24
@@ -393,6 +422,7 @@ node n5 {
                 interface eth2
                  ip address 10.0.9.1/24
                  ipv6 address fc00:13::1/64
+                 bandwidth 1000
                 !
                 router ospf
                  redistribute static
@@ -545,13 +575,17 @@ link l9 {
     bandwidth 0
 }
 
+link l4 {
+    nodes {n3 n0}
+    bandwidth 0
+}
+
 annotation a0 {
     type rectangle
     iconcoords {59 415 641 609}
     color #80fb80
     bordercolor black
     width 1
-    rad 25
     canvas c0
 }
 
@@ -570,7 +604,6 @@ annotation a2 {
     color #f3f13b
     bordercolor #dcf430
     width 1
-    rad 25
     canvas c0
 }
 
@@ -580,7 +613,6 @@ annotation a3 {
     color #fb3828
     bordercolor black
     width 1
-    rad 25
     canvas c0
 }
 
