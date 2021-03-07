@@ -47,17 +47,17 @@ node n0 {
                 interface eth0
                  ip address 10.0.0.1/24
                  ipv6 address fc00:a::1/64
-                 ip ospf cost 8
+                 ip ospf cost 2
                 !
                 interface eth1
                  ip address 10.0.2.2/24
                  ipv6 address fc00:c::2/64
-                 ip ospf cost 2
+                 ip ospf cost 3
                 !
                 interface eth2
                  ip address 10.0.4.2/24
                  ipv6 address fc00:e::1/64
-                 ip ospf cost 10
+                 ip ospf cost 8
                 !
                 router ospf
                  redistribute static
@@ -118,12 +118,12 @@ node n1 {
                 interface eth0
                  ip address 10.0.2.1/24
                  ipv6 address fc00:c::1/64
-                 ip ospf cost 2
+                 ip ospf cost 3
                 !
                 interface eth1
                  ip address 10.0.3.1/24
                  ipv6 address fc00:d::1/64
-                 ip ospf cost 2
+                 ip ospf cost 3
                 !
                 router ospf
                  redistribute static
@@ -183,10 +183,12 @@ node n2 {
                 interface eth0
                  ip address 10.0.0.2/24
                  ipv6 address fc00:a::2/64
+                 ip ospf cost 2
                 !
                 interface eth1
                  ip address 10.0.1.2/24
                  ipv6 address fc00:b::2/64
+                 ip ospf cost 2
                 !
                 router ospf
                  redistribute static
@@ -257,15 +259,17 @@ node n3 {
                 interface eth0
                  ip address 10.0.1.1/24
                  ipv6 address fc00:b::1/64
+                 ip ospf cost 2
                 !
                 interface eth1
                  ip address 10.0.3.2/24
                  ipv6 address fc00:d::2/64
+                 ip ospf cost 3
                 !
                 interface eth2
                  ip address 10.0.4.1/24
                  ipv6 address fc00:e::2/64
-                 ip ospf cost 10
+                 ip ospf cost 8
                 !
                 interface eth3
                  ip address 10.0.5.2/24
@@ -370,20 +374,22 @@ node n5 {
     network-config {
 	hostname router6
 	!
-	interface eth2
-	 ip address 10.0.9.1/24
-	 ipv6 address fc00:14::1/64
-	 mac address 42:00:aa:00:00:12
-	!
 	interface eth1
 	 ip address 10.0.8.2/24
 	 ipv6 address fc00:12::2/64
 	 mac address 42:00:aa:00:00:11
+	 mtu 1000
 	!
 	interface eth0
 	 ip address 10.0.6.2/24
 	 ipv6 address fc00:10::2/64
 	 mac address 42:00:aa:00:00:0d
+	 mtu 1500
+	!
+	interface eth2
+	 ip address 10.0.9.1/24
+	 ipv6 address fc00:14::1/64
+	 mac address 42:00:aa:00:00:12
 	!
 	interface lo0
 	 type lo
@@ -449,11 +455,13 @@ node n6 {
 	 ip address 10.0.8.1/24
 	 ipv6 address fc00:12::1/64
 	 mac address 42:00:aa:00:00:10
+	 mtu 1000
 	!
 	interface eth0
 	 ip address 10.0.7.1/24
 	 ipv6 address fc00:11::1/64
 	 mac address 42:00:aa:00:00:0e
+	 mtu 1500
 	!
 	interface lo0
 	 type lo
@@ -567,7 +575,7 @@ link l7 {
 
 link l8 {
     nodes {n6 n5}
-    bandwidth 0
+    bandwidth 2000
 }
 
 link l9 {
@@ -636,6 +644,7 @@ annotation a5 {
 
 canvas c0 {
     name {Canvas0}
+    size {1000 620}
 }
 
 option show {
